@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standings · Golf League 2026</title>
+  <style>
+    :root {
+      --g900: #071a0c;
+      --g800: #0d3318;
+      --g700: #1a5c2e;
+      --g600: #2d7a42;
+      --gold: #c9a227;
+      --gold-l: #e8c55a;
+      --bg: #f3f7f0;
+      --surface: #ffffff;
+      --border: #d8e8cf;
+      --text: #111a0e;
+      --text-dim: #3d5230;
+      --text-muted: #7a9465;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(8,30,12,.09);
+      --font: 'Calibri', 'Segoe UI', system-ui, sans-serif;
+
+      --tier-tour-bg:  #fdf8e8;
+      --tier-tour-bdr: #c9a227;
+      --tier-bmw-bg:   #f0f4f8;
+      --tier-bmw-bdr:  #90a8c0;
+      --tier-ply-bg:   #eef7f1;
+      --tier-ply-bdr:  #2d7a42;
+      --tier-out-bg:   #f8f8f8;
+      --tier-out-bdr:  #c8d0c0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Nav */
+    nav { background: var(--g900); padding: 0 24px; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--gold); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { font-size: 26px; line-height: 1; }
+    .logo-name { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: .02em; line-height: 1.2; }
+    .logo-name span { color: var(--gold); }
+    .logo-sub { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #4a6e4f; }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-link { padding: 6px 13px; font-size: 13px; font-weight: 600; color: #7aaa7e; border-radius: 6px; transition: background .15s, color .15s; }
+    .nav-link:hover, .nav-link.active { background: rgba(201,162,39,.12); color: var(--gold); }
+    .nav-hub { border: 1px solid rgba(201,162,39,.3); color: var(--gold); font-size: 12px; margin-left: 8px; }
+    .nav-hub:hover { background: rgba(201,162,39,.15); }
+    @media (max-width: 600px) { .nav-link:not(.nav-hub) { padding: 5px 8px; font-size: 12px; } }
+
+    /* Page header */
+    .page-header {
+      background: linear-gradient(160deg, var(--g900) 0%, #0a2e12 100%);
+      padding: 40px 24px 36px;
+      border-bottom: 3px solid var(--gold);
+    }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; }
+    .page-header h1 { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+    .page-header h1 span { color: var(--gold); }
+    .page-header p { font-size: 14px; color: #6a9a72; }
+    .page-header-meta { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+    .meta-stat { text-align: center; }
+    .meta-num { font-size: 22px; font-weight: 900; color: var(--gold); line-height: 1; }
+    .meta-label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #4a7a52; margin-top: 2px; }
+
+    /* Main */
+    .main { max-width: 1100px; margin: 0 auto; padding: 36px 24px 72px; }
+
+    /* Tier key */
+    .tier-key { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .tk-pill {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      border: 1px solid;
+    }
+    .tk-tour { background: var(--tier-tour-bg); border-color: var(--tier-tour-bdr); color: #7a5a00; }
+    .tk-bmw  { background: var(--tier-bmw-bg);  border-color: var(--tier-bmw-bdr);  color: #3a5a7a; }
+    .tk-ply  { background: var(--tier-ply-bg);  border-color: var(--tier-ply-bdr);  color: var(--g700); }
+    .tk-out  { background: var(--tier-out-bg);  border-color: var(--tier-out-bdr);  color: #666; }
+    .tk-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .tk-tour .tk-dot { background: var(--gold); }
+    .tk-bmw  .tk-dot { background: #90a8c0; }
+    .tk-ply  .tk-dot { background: var(--g700); }
+    .tk-out  .tk-dot { background: #aaa; }
+
+    /* Table wrap */
+    .table-wrap {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      overflow-x: auto;
+    }
+
+    table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    thead th {
+      padding: 12px 14px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--g900);
+      color: #6aaa7a;
+      text-align: left;
+      white-space: nowrap;
+    }
+    thead th.right { text-align: right; }
+    thead th:first-child { padding-left: 20px; }
+    thead th:last-child  { padding-right: 20px; }
+
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(45,122,66,.04); }
+
+    td { padding: 11px 14px; font-size: 14px; vertical-align: middle; }
+    td:first-child { padding-left: 20px; }
+    td:last-child  { padding-right: 20px; }
+    td.right { text-align: right; }
+    td.mono  { font-family: 'Calibri', monospace; }
+
+    /* Row tier backgrounds */
+    tr.tier-tour { background: var(--tier-tour-bg); }
+    tr.tier-tour:hover { background: #fdf4d0; }
+    tr.tier-bmw  { background: var(--tier-bmw-bg); }
+    tr.tier-bmw:hover  { background: #e4eef8; }
+    tr.tier-ply  { background: var(--tier-ply-bg); }
+    tr.tier-ply:hover  { background: #dcf0e4; }
+    tr.tier-out  { background: var(--tier-out-bg); }
+
+    /* Rank cell */
+    .rank-num { font-size: 15px; font-weight: 900; color: var(--text-dim); min-width: 28px; display: inline-block; }
+    .rank-num.top3 { color: var(--gold); }
+
+    /* Movement */
+    .move { font-size: 11px; font-weight: 700; min-width: 30px; display: inline-block; text-align: center; }
+    .move.up   { color: #27ae60; }
+    .move.down { color: #e74c3c; }
+    .move.same { color: #bbb; }
+
+    /* Player cell */
+    .player-name { font-size: 15px; font-weight: 700; color: var(--text); }
+    .tier-badge {
+      display: inline-block;
+      font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 10px; vertical-align: middle;
+      margin-left: 6px;
+    }
+    .tb-tour { background: rgba(201,162,39,.15); color: #7a5a00; }
+    .tb-bmw  { background: rgba(90,130,180,.12);  color: #3a5a7a; }
+    .tb-ply  { background: rgba(45,122,66,.12);   color: var(--g700); }
+
+    /* FedEx pts */
+    .fedex-pts { font-size: 15px; font-weight: 800; color: var(--g700); }
+    tr.tier-tour .fedex-pts { color: #8a6a00; }
+
+    /* Wins badge */
+    .wins-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(201,162,39,.15); color: #7a5a00;
+      border-radius: 12px; padding: 2px 8px;
+      font-size: 12px; font-weight: 800;
+      min-width: 28px;
+    }
+    .wins-zero { color: var(--text-muted); font-weight: 400; }
+
+    /* Missed week — highlight in red if >0 */
+    .missed-0 { color: var(--text-muted); }
+    .missed-hi { color: #c0392b; font-weight: 800; }
+
+    /* Cutoff divider rows */
+    tr.cutoff-row td {
+      padding: 8px 20px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      border-bottom: 2px solid;
+      border-top: 2px solid;
+    }
+    tr.cutoff-tour td { background: rgba(201,162,39,.1); color: #7a5a00; border-color: var(--gold); }
+    tr.cutoff-bmw  td { background: rgba(90,130,180,.08); color: #3a5a7a; border-color: #90a8c0; }
+    tr.cutoff-ply  td { background: rgba(45,122,66,.08);  color: var(--g700); border-color: var(--g700); }
+
+    /* Updated timestamp */
+    .updated { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: right; }
+
+    /* Footer */
+    footer { background: var(--g900); border-top: 2px solid var(--gold); padding: 24px; text-align: center; }
+    footer p { font-size: 12px; color: #3d5a3a; letter-spacing: .04em; }
+    footer span { color: var(--gold); }
+
+    .loader { text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px; }
+
+    @media (max-width: 480px) {
+      .page-header { padding: 28px 16px 24px; }
+      .main { padding: 24px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo-wrap">
+      <span class="logo-icon">⛳</span>
+      <div>
+        <div class="logo-name">Golf League <span>2026</span></div>
+        <div class="logo-sub">Vinksters Leagues</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="standings.html" class="nav-link active">Standings</a>
+      <a href="schedule.html" class="nav-link">Schedule</a>
+      <a href="rules.html" class="nav-link">Rules</a>
+      <a href="https://vinkster15.github.io/Vinksters-Leagues/" class="nav-link nav-hub">All Leagues ↗</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1>📋 <span>2026</span> Standings</h1>
+    <p>Live standings updated from Google Sheets · FedEx Cup style format</p>
+    <div class="page-header-meta">
+      <div class="meta-stat"><div class="meta-num">53</div><div class="meta-label">Players</div></div>
+      <div class="meta-stat"><div class="meta-num">10</div><div class="meta-label">Tour Champ</div></div>
+      <div class="meta-stat"><div class="meta-num">20</div><div class="meta-label">BMW Champ</div></div>
+      <div class="meta-stat"><div class="meta-num">32</div><div class="meta-label">Playoffs</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="tier-key">
+    <span class="tk-pill tk-tour"><span class="tk-dot"></span>Tour Championship (Top 10)</span>
+    <span class="tk-pill tk-bmw"><span class="tk-dot"></span>BMW Championship (Top 20)</span>
+    <span class="tk-pill tk-ply"><span class="tk-dot"></span>FedEx Playoffs (Top 32)</span>
+    <span class="tk-pill tk-out"><span class="tk-dot"></span>Outside Playoffs (33+)</span>
+  </div>
+
+  <p class="updated" id="updated-ts"></p>
+
+  <div class="table-wrap">
+    <div class="loader" id="loader">Loading standings…</div>
+    <table id="standings-table" style="display:none">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>+/−</th>
+          <th>Player</th>
+          <th class="right">FedEx Pts</th>
+          <th class="right">Bonus Pts</th>
+          <th class="right">Wins</th>
+          <th class="right">Last</th>
+          <th class="right">Missed</th>
+          <th class="right">Avg DK</th>
+        </tr>
+      </thead>
+      <tbody id="standings-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 <span>Vinksters Golf League</span> · Live data via Google Sheets</p>
+</footer>
+
+<script>
+  const SHEET_ID = '11ZLk3YMe6II27HqFQ1hb1Lf7C47W8iF8wwNQ4MBWgOI';
+  const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+
+  function parseCSV(text) {
+    return text.trim().split('\n').slice(1).map(line => {
+      const cols = [];
+      let cur = '', inQ = false;
+      for (const ch of line) {
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+        else { cur += ch; }
+      }
+      cols.push(cur.trim());
+      return {
+        lastWeek:   parseInt(cols[0])   || 0,
+        rank:       parseInt(cols[1])   || 0,
+        player:     cols[2]             || '',
+        fedexPts:   parseFloat(cols[3]) || 0,
+        bonusPts:   parseFloat(cols[4]) || 0,
+        wins:       parseInt(cols[5])   || 0,
+        lastPlace:  parseInt(cols[6])   || 0,
+        missedWeek: parseInt(cols[7])   || 0,
+        avgDK:      parseFloat(cols[8]) || 0,
+      };
+    }).filter(r => r.player);
+  }
+
+  function tierClass(rank) {
+    if (rank <= 10) return 'tier-tour';
+    if (rank <= 20) return 'tier-bmw';
+    if (rank <= 32) return 'tier-ply';
+    return 'tier-out';
+  }
+
+  function tierBadge(rank) {
+    if (rank <= 10) return '<span class="tier-badge tb-tour">Tour Champ</span>';
+    if (rank <= 20) return '<span class="tier-badge tb-bmw">BMW Champ</span>';
+    if (rank <= 32) return '<span class="tier-badge tb-ply">Playoffs</span>';
+    return '';
+  }
+
+  function moveCell(row) {
+    const diff = row.lastWeek - row.rank;
+    if (!row.lastWeek) return `<span class="move same">NEW</span>`;
+    if (diff > 0)  return `<span class="move up">▲${diff}</span>`;
+    if (diff < 0)  return `<span class="move down">▼${Math.abs(diff)}</span>`;
+    return `<span class="move same">—</span>`;
+  }
+
+  function cutoffRow(label, cls) {
+    return `<tr class="cutoff-row ${cls}"><td colspan="9">${label}</td></tr>`;
+  }
+
+  async function init() {
+    try {
+      const res  = await fetch(CSV_URL);
+      const text = await res.text();
+      const rows = parseCSV(text);
+
+      let html = '';
+      rows.forEach((r, i) => {
+        // Insert cutoff dividers AFTER the qualifying position
+        if (r.rank === 11) html += cutoffRow('── Tour Championship Cutline (Top 10 advance) ──', 'cutoff-tour');
+        if (r.rank === 21) html += cutoffRow('── BMW Championship Cutline (Top 20 advance) ──', 'cutoff-bmw');
+        if (r.rank === 33) html += cutoffRow('── FedEx Playoffs Cutline (Top 32 advance) ──', 'cutoff-ply');
+
+        const top3 = r.rank <= 3 ? ' top3' : '';
+        const winsHTML = r.wins > 0
+          ? `<span class="wins-badge">🏆 ${r.wins}</span>`
+          : `<span class="wins-zero">—</span>`;
+        const missedHTML = r.missedWeek > 0
+          ? `<span class="missed-hi">${r.missedWeek}</span>`
+          : `<span class="missed-0">—</span>`;
+
+        html += `
+          <tr class="${tierClass(r.rank)}">
+            <td><span class="rank-num${top3}">${r.rank}</span></td>
+            <td>${moveCell(r)}</td>
+            <td class="player-name">${r.player}${tierBadge(r.rank)}</td>
+            <td class="right fedex-pts">${r.fedexPts.toLocaleString()}</td>
+            <td class="right">${r.bonusPts || '—'}</td>
+            <td class="right">${winsHTML}</td>
+            <td class="right">${r.lastPlace || '—'}</td>
+            <td class="right">${missedHTML}</td>
+            <td class="right mono">${r.avgDK.toFixed(1)}</td>
+          </tr>`;
+      });
+
+      document.getElementById('standings-body').innerHTML = html;
+      document.getElementById('standings-table').style.display = 'table';
+      document.getElementById('loader').style.display = 'none';
+
+      const now = new Date();
+      document.getElementById('updated-ts').textContent =
+        `Last loaded: ${now.toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric'})} at ${now.toLocaleTimeString('en-US', {hour:'numeric',minute:'2-digit'})}`;
+
+    } catch (e) {
+      document.getElementById('loader').textContent = 'Unable to load standings. Check that the sheet is publicly shared and try again.';
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>

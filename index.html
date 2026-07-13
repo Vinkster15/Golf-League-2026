@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Golf League 2026 · Vinksters</title>
+  <style>
+    :root {
+      --g900: #071a0c;
+      --g800: #0d3318;
+      --g700: #1a5c2e;
+      --g600: #2d7a42;
+      --g500: #4caf70;
+      --gold: #c9a227;
+      --gold-l: #e8c55a;
+      --bg: #f3f7f0;
+      --surface: #ffffff;
+      --border: #d8e8cf;
+      --text: #111a0e;
+      --text-dim: #3d5230;
+      --text-muted: #7a9465;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(8,30,12,.09);
+      --shadow-hover: 0 8px 28px rgba(8,30,12,.18);
+      --font: 'Calibri', 'Segoe UI', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav ── */
+    nav { background: var(--g900); padding: 0 24px; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--gold); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { font-size: 26px; line-height: 1; }
+    .logo-name { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: .02em; line-height: 1.2; }
+    .logo-name span { color: var(--gold); }
+    .logo-sub { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #4a6e4f; }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-link { padding: 6px 13px; font-size: 13px; font-weight: 600; color: #7aaa7e; border-radius: 6px; transition: background .15s, color .15s; }
+    .nav-link:hover, .nav-link.active { background: rgba(201,162,39,.12); color: var(--gold); }
+    .nav-hub { border: 1px solid rgba(201,162,39,.3); color: var(--gold); font-size: 12px; margin-left: 8px; }
+    .nav-hub:hover { background: rgba(201,162,39,.15); }
+    @media (max-width: 600px) {
+      .nav-link:not(.nav-hub) { padding: 5px 8px; font-size: 12px; }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(160deg, var(--g900) 0%, #0a2e12 45%, #102a08 100%);
+      padding: 64px 24px 56px;
+      text-align: center;
+      border-bottom: 3px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '⛳';
+      position: absolute; font-size: 300px; opacity: .035;
+      top: -40px; right: -30px; pointer-events: none; line-height: 1;
+    }
+    .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(30px, 5.5vw, 60px); font-weight: 900; color: #fff; letter-spacing: .02em; line-height: 1.1; margin-bottom: 14px; }
+    .hero h1 span { color: var(--gold); }
+    .hero-sub { font-size: 15px; color: #6a9a72; max-width: 480px; margin: 0 auto 36px; }
+    .hero-stats { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hs-num { font-size: 30px; font-weight: 900; color: var(--gold); line-height: 1; }
+    .hs-label { font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #4a7a52; margin-top: 4px; }
+
+    /* ── Main layout ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 52px 24px 72px; }
+    .section-head { font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .section-head.gold { color: var(--gold); }
+
+    /* ── Top 3 cards ── */
+    .podium { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 52px; }
+    @media (max-width: 640px) { .podium { grid-template-columns: 1fr; } }
+    .pod-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+      border-top: 5px solid var(--border);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .pod-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    .pod-card.p1 { border-top-color: var(--gold); }
+    .pod-card.p2 { border-top-color: #a8b8c0; }
+    .pod-card.p3 { border-top-color: #c08040; }
+    .pod-medal { font-size: 22px; margin-bottom: 6px; }
+    .pod-rank { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); }
+    .pod-rank.p1 { color: var(--gold); }
+    .pod-rank.p2 { color: #909eaa; }
+    .pod-rank.p3 { color: #c08040; }
+    .pod-player { font-size: 20px; font-weight: 900; color: var(--text); margin-bottom: 2px; }
+    .pod-pts { font-size: 32px; font-weight: 900; color: var(--g700); line-height: 1; }
+    .pod-pts-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .pod-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+    .pod-stats { display: flex; gap: 18px; flex-wrap: wrap; }
+    .pod-stat { display: flex; flex-direction: column; }
+    .pod-stat-num { font-size: 15px; font-weight: 800; color: var(--text); line-height: 1; }
+    .pod-stat-label { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Playoff Picture ── */
+    .playoff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-bottom: 52px; }
+    .pp-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .pp-icon { font-size: 28px; flex-shrink: 0; }
+    .pp-body { flex: 1; }
+    .pp-title { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.2; }
+    .pp-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .pp-badge {
+      font-size: 20px; font-weight: 900; line-height: 1;
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .pp-badge .pp-badge-label { font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
+    .pp-tour { background: rgba(201,162,39,.12); color: var(--gold); }
+    .pp-bmw  { background: rgba(140,160,180,.12); color: #6a8a9a; }
+    .pp-ply  { background: rgba(45,122,66,.12); color: var(--g700); }
+    .pp-out  { background: rgba(150,150,150,.1); color: #888; }
+
+    /* ── Quick nav ── */
+    .nav-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .nav-card {
+      background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 24px 22px; text-align: center; display: block;
+      border-bottom: 3px solid var(--border);
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .nav-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-bottom-color: var(--g700); }
+    .nc-icon { font-size: 30px; margin-bottom: 10px; }
+    .nc-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .nc-sub { font-size: 12px; color: var(--text-muted); }
+
+    /* ── Footer ── */
+    footer { background: var(--g900); border-top: 2px solid var(--gold); padding: 24px; text-align: center; }
+    footer p { font-size: 12px; color: #3d5a3a; letter-spacing: .04em; }
+    footer span { color: var(--gold); }
+
+    .loader { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+
+    @media (max-width: 480px) {
+      .hero { padding: 44px 16px 38px; }
+      .hero-stats { gap: 22px; }
+      .main { padding: 32px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo-wrap">
+      <span class="logo-icon">⛳</span>
+      <div>
+        <div class="logo-name">Golf League <span>2026</span></div>
+        <div class="logo-sub">Vinksters Leagues</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="standings.html" class="nav-link">Standings</a>
+      <a href="schedule.html" class="nav-link">Schedule</a>
+      <a href="rules.html" class="nav-link">Rules</a>
+      <a href="https://vinkster15.github.io/Vinksters-Leagues/" class="nav-link nav-hub">All Leagues ↗</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <p class="hero-eyebrow">⛳ 2026 PGA Tour Season</p>
+  <h1>Vinksters <span>Golf League</span></h1>
+  <p class="hero-sub">DraftKings fantasy golf · 53 players · FedEx Cup style playoffs</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hs-num">53</div>
+      <div class="hs-label">Players</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hs-num" id="hero-leader">—</div>
+      <div class="hs-label">Current Leader</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hs-num" id="hero-pts">—</div>
+      <div class="hs-label">Leader FedEx Pts</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hs-num">10</div>
+      <div class="hs-label">Tour Champ Spots</div>
+    </div>
+  </div>
+</section>
+
+<div class="main">
+
+  <!-- Podium -->
+  <section style="margin-bottom:52px">
+    <p class="section-head gold">🏆 Current Leaderboard</p>
+    <div class="podium" id="podium">
+      <div class="loader">Loading live standings…</div>
+    </div>
+  </section>
+
+  <!-- Playoff picture -->
+  <section style="margin-bottom:52px">
+    <p class="section-head">📊 Playoff Picture</p>
+    <div class="playoff-grid">
+      <div class="pp-card">
+        <div class="pp-icon">🏆</div>
+        <div class="pp-body">
+          <div class="pp-title">Tour Championship</div>
+          <div class="pp-sub">East Lake · Atlanta, GA</div>
+        </div>
+        <div class="pp-badge pp-tour">
+          <div>10</div>
+          <div class="pp-badge-label">Spots</div>
+        </div>
+      </div>
+      <div class="pp-card">
+        <div class="pp-icon">🥈</div>
+        <div class="pp-body">
+          <div class="pp-title">BMW Championship</div>
+          <div class="pp-sub">Top 20 advance</div>
+        </div>
+        <div class="pp-badge pp-bmw">
+          <div>20</div>
+          <div class="pp-badge-label">Spots</div>
+        </div>
+      </div>
+      <div class="pp-card">
+        <div class="pp-icon">🎯</div>
+        <div class="pp-body">
+          <div class="pp-title">FedEx Playoffs</div>
+          <div class="pp-sub">Top 32 qualify</div>
+        </div>
+        <div class="pp-badge pp-ply">
+          <div>32</div>
+          <div class="pp-badge-label">Spots</div>
+        </div>
+      </div>
+      <div class="pp-card">
+        <div class="pp-icon">⛔</div>
+        <div class="pp-body">
+          <div class="pp-title">Outside Playoffs</div>
+          <div class="pp-sub">Rank 33–53 eliminated</div>
+        </div>
+        <div class="pp-badge pp-out">
+          <div>21</div>
+          <div class="pp-badge-label">Out</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick nav -->
+  <section>
+    <p class="section-head">📁 Explore</p>
+    <div class="nav-cards">
+      <a href="standings.html" class="nav-card">
+        <div class="nc-icon">📋</div>
+        <div class="nc-title">Full Standings</div>
+        <div class="nc-sub">All 53 players · FedEx Pts</div>
+      </a>
+      <a href="schedule.html" class="nav-card">
+        <div class="nc-icon">📅</div>
+        <div class="nc-title">Schedule</div>
+        <div class="nc-sub">2026 PGA Tour events</div>
+      </a>
+      <a href="rules.html" class="nav-card">
+        <div class="nc-icon">📜</div>
+        <div class="nc-title">League Rules</div>
+        <div class="nc-sub">Scoring, playoffs &amp; format</div>
+      </a>
+      <a href="https://vinkster15.github.io/Vinksters-Leagues/" class="nav-card">
+        <div class="nc-icon">🏠</div>
+        <div class="nc-title">Vinksters Hub</div>
+        <div class="nc-sub">All leagues</div>
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>© 2026 <span>Vinksters Golf League</span> · Powered by DraftKings · Live data via Google Sheets</p>
+</footer>
+
+<script>
+  const SHEET_ID = '11ZLk3YMe6II27HqFQ1hb1Lf7C47W8iF8wwNQ4MBWgOI';
+  const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    return lines.slice(1).map(line => {
+      const cols = [];
+      let cur = '', inQ = false;
+      for (const ch of line) {
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+        else { cur += ch; }
+      }
+      cols.push(cur.trim());
+      return {
+        lastWeek:   parseInt(cols[0])   || 0,
+        rank:       parseInt(cols[1])   || 0,
+        player:     cols[2]             || '',
+        fedexPts:   parseFloat(cols[3]) || 0,
+        bonusPts:   parseFloat(cols[4]) || 0,
+        wins:       parseInt(cols[5])   || 0,
+        lastPlace:  parseInt(cols[6])   || 0,
+        missedWeek: parseInt(cols[7])   || 0,
+        avgDK:      parseFloat(cols[8]) || 0,
+      };
+    }).filter(r => r.player);
+  }
+
+  async function init() {
+    try {
+      const res  = await fetch(CSV_URL);
+      const text = await res.text();
+      const rows = parseCSV(text);
+
+      const leader = rows[0];
+      document.getElementById('hero-leader').textContent = leader.player;
+      document.getElementById('hero-pts').textContent = leader.fedexPts.toLocaleString();
+
+      const medals = ['🥇', '🥈', '🥉'];
+      const rankClass = ['p1', 'p2', 'p3'];
+      const rankLabel = ['1st Place', '2nd Place', '3rd Place'];
+
+      document.getElementById('podium').innerHTML = rows.slice(0, 3).map((r, i) => `
+        <div class="pod-card ${rankClass[i]}">
+          <div class="pod-medal">${medals[i]}</div>
+          <div class="pod-rank ${rankClass[i]}">${rankLabel[i]}</div>
+          <div class="pod-player">${r.player}</div>
+          <div class="pod-pts">${r.fedexPts.toLocaleString()}</div>
+          <div class="pod-pts-label">FedEx Points</div>
+          <hr class="pod-divider" />
+          <div class="pod-stats">
+            <div class="pod-stat">
+              <span class="pod-stat-num">${r.wins || '—'}</span>
+              <span class="pod-stat-label">Wins</span>
+            </div>
+            <div class="pod-stat">
+              <span class="pod-stat-num">${r.bonusPts}</span>
+              <span class="pod-stat-label">Bonus Pts</span>
+            </div>
+            <div class="pod-stat">
+              <span class="pod-stat-num">${r.avgDK.toFixed(1)}</span>
+              <span class="pod-stat-label">Avg DK</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+    } catch (e) {
+      document.getElementById('podium').innerHTML =
+        '<p style="color:var(--text-muted);text-align:center;padding:32px;grid-column:1/-1">Unable to load standings. Please try again.</p>';
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rules · Golf League 2026</title>
+  <style>
+    :root {
+      --g900: #071a0c;
+      --g800: #0d3318;
+      --g700: #1a5c2e;
+      --g600: #2d7a42;
+      --gold: #c9a227;
+      --bg: #f3f7f0;
+      --surface: #ffffff;
+      --border: #d8e8cf;
+      --text: #111a0e;
+      --text-dim: #3d5230;
+      --text-muted: #7a9465;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(8,30,12,.09);
+      --font: 'Calibri', 'Segoe UI', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.6; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+
+    nav { background: var(--g900); padding: 0 24px; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--gold); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { font-size: 26px; line-height: 1; }
+    .logo-name { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: .02em; line-height: 1.2; }
+    .logo-name span { color: var(--gold); }
+    .logo-sub { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #4a6e4f; }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-link { padding: 6px 13px; font-size: 13px; font-weight: 600; color: #7aaa7e; border-radius: 6px; transition: background .15s, color .15s; }
+    .nav-link:hover, .nav-link.active { background: rgba(201,162,39,.12); color: var(--gold); }
+    .nav-hub { border: 1px solid rgba(201,162,39,.3); color: var(--gold); font-size: 12px; margin-left: 8px; }
+    .nav-hub:hover { background: rgba(201,162,39,.15); }
+    @media (max-width: 600px) { .nav-link:not(.nav-hub) { padding: 5px 8px; font-size: 12px; } }
+
+    .page-header {
+      background: linear-gradient(160deg, var(--g900) 0%, #0a2e12 100%);
+      padding: 40px 24px 36px;
+      border-bottom: 3px solid var(--gold);
+    }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; }
+    .page-header h1 { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 6px; }
+    .page-header h1 span { color: var(--gold); }
+    .page-header p { font-size: 14px; color: #6a9a72; }
+
+    .main { max-width: 860px; margin: 0 auto; padding: 48px 24px 72px; }
+
+    /* Rule sections */
+    .rule-section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      border-left: 5px solid var(--border);
+    }
+    .rule-section.gold  { border-left-color: var(--gold); }
+    .rule-section.green { border-left-color: var(--g700); }
+    .rule-section.blue  { border-left-color: #6090c0; }
+    .rule-section.red   { border-left-color: #c04040; }
+
+    .rs-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .rs-icon { font-size: 26px; line-height: 1; }
+    .rs-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: .01em;
+    }
+    .rs-sub {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .rule-section p {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+    .rule-section p:last-child { margin-bottom: 0; }
+
+    /* Scoring table */
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    .score-table th {
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+    }
+    .score-table td {
+      padding: 9px 12px;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+    }
+    .score-table tr:last-child td { border-bottom: none; }
+    .score-table td:first-child { font-weight: 700; color: var(--text); }
+    .score-table td.pts { font-weight: 900; color: var(--g700); text-align: right; }
+    .score-table td.pts.gold { color: var(--gold); }
+    .score-table td.pts.red  { color: #c04040; }
+
+    /* Tier table */
+    .tier-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+    .tier-table th {
+      padding: 8px 14px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+      background: var(--bg);
+    }
+    .tier-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-dim); }
+    .tier-table tr:last-child td { border-bottom: none; }
+    .tier-table .tier-tour td { background: #fdf8e8; }
+    .tier-table .tier-bmw  td { background: #f0f4f8; }
+    .tier-table .tier-ply  td { background: #eef7f1; }
+    .tier-table .tier-out  td { background: #f8f8f8; color: #888; }
+    .tier-badge {
+      font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 10px; display: inline-block;
+    }
+    .tb-tour { background: rgba(201,162,39,.2); color: #7a5a00; }
+    .tb-bmw  { background: rgba(90,130,180,.15); color: #3a5a7a; }
+    .tb-ply  { background: rgba(45,122,66,.15); color: var(--g700); }
+    .tb-out  { background: #e8e8e8; color: #666; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: rgba(201,162,39,.08);
+      border: 1px solid rgba(201,162,39,.25);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text-dim);
+      margin: 12px 0;
+    }
+    .highlight-box strong { color: #7a5a00; }
+
+    /* Warning box */
+    .warn-box {
+      background: rgba(192,64,64,.06);
+      border: 1px solid rgba(192,64,64,.2);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text-dim);
+      margin: 12px 0;
+    }
+    .warn-box strong { color: #c04040; }
+
+    /* Footer */
+    footer { background: var(--g900); border-top: 2px solid var(--gold); padding: 24px; text-align: center; }
+    footer p { font-size: 12px; color: #3d5a3a; letter-spacing: .04em; }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 480px) {
+      .rule-section { padding: 20px 18px; }
+      .page-header { padding: 28px 16px 24px; }
+      .main { padding: 28px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo-wrap">
+      <span class="logo-icon">⛳</span>
+      <div>
+        <div class="logo-name">Golf League <span>2026</span></div>
+        <div class="logo-sub">Vinksters Leagues</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="standings.html" class="nav-link">Standings</a>
+      <a href="schedule.html" class="nav-link">Schedule</a>
+      <a href="rules.html" class="nav-link active">Rules</a>
+      <a href="https://vinkster15.github.io/Vinksters-Leagues/" class="nav-link nav-hub">All Leagues ↗</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1>📜 League <span>Rules</span></h1>
+    <p>How the Vinksters Golf League works · 2026 edition</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- League Format -->
+  <div class="rule-section green">
+    <div class="rs-head">
+      <span class="rs-icon">🏌️</span>
+      <div>
+        <div class="rs-title">League Format</div>
+        <div class="rs-sub">How it works</div>
+      </div>
+    </div>
+    <p>The Vinksters Golf League runs alongside the PGA Tour season. Each week a new PGA Tour event is contested, and players submit a DraftKings fantasy golf lineup for that event. Your DraftKings score each week becomes your FedEx Points for that event, and scores accumulate over the course of the season just like the real FedEx Cup.</p>
+    <p>The league features 53 players competing across a full PGA Tour season, from the early season invitationals all the way through the FedEx Cup Playoffs. The season concludes at the Tour Championship in late August.</p>
+    <div class="highlight-box">
+      <strong>Quick summary:</strong> Enter your DK golf lineup each week → accumulate FedEx Points → top 32 make the playoffs → top 20 reach BMW Championship → top 10 compete at the Tour Championship.
+    </div>
+  </div>
+
+  <!-- Weekly Scoring -->
+  <div class="rule-section gold">
+    <div class="rs-head">
+      <span class="rs-icon">📊</span>
+      <div>
+        <div class="rs-title">Weekly Scoring</div>
+        <div class="rs-sub">DraftKings fantasy golf</div>
+      </div>
+    </div>
+    <p>Each week you enter a DraftKings fantasy golf contest for that week's PGA Tour event. Your DraftKings score for that contest is your weekly contribution to your FedEx Points total.</p>
+    <p>DraftKings fantasy golf scoring is based on real-world golfer performance over all four rounds of the tournament. Key scoring categories include:</p>
+    <table class="score-table">
+      <thead>
+        <tr><th>Scoring Action</th><th style="text-align:right">DK Points</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Eagle</td><td class="pts gold">+8</td></tr>
+        <tr><td>Birdie</td><td class="pts">+3</td></tr>
+        <tr><td>Par</td><td class="pts">+0.5</td></tr>
+        <tr><td>Bogey</td><td class="pts red">−0.5</td></tr>
+        <tr><td>Double Bogey or worse</td><td class="pts red">−1</td></tr>
+        <tr><td>Hole-in-One</td><td class="pts gold">+5 bonus</td></tr>
+        <tr><td>Streak Bonus (3+ birdies/eagles)</td><td class="pts">+3</td></tr>
+        <tr><td>Bogey-Free Round</td><td class="pts">+3</td></tr>
+        <tr><td>Made Cut (makes weekend)</td><td class="pts">+3 per round</td></tr>
+      </tbody>
+    </table>
+    <p>Your FedEx Points for the week = your total DraftKings fantasy score for that event, added directly to your season total.</p>
+  </div>
+
+  <!-- Bonus Points -->
+  <div class="rule-section gold">
+    <div class="rs-head">
+      <span class="rs-icon">⭐</span>
+      <div>
+        <div class="rs-title">Bonus Points</div>
+        <div class="rs-sub">Weekly rewards</div>
+      </div>
+    </div>
+    <p>Bonus Points are awarded on top of your weekly DraftKings score for exceptional performance. These bonus points stack with your regular FedEx Points and can make a significant difference in the standings.</p>
+    <table class="score-table">
+      <thead>
+        <tr><th>Achievement</th><th style="text-align:right">Bonus Pts</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>🏆 Weekly Winner (highest DK score)</td><td class="pts gold">+3</td></tr>
+        <tr><td>🥈 Weekly Runner-Up</td><td class="pts">+2</td></tr>
+        <tr><td>🥉 3rd Place</td><td class="pts">+1</td></tr>
+        <tr><td>Other bonus positions</td><td class="pts">Varies</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box">
+      <strong>Note:</strong> Bonus point rules may be updated by the commissioner. The Bonus Pts column in the standings reflects your total accumulated bonus points for the season.
+    </div>
+  </div>
+
+  <!-- Missed Weeks & Last Place -->
+  <div class="rule-section red">
+    <div class="rs-head">
+      <span class="rs-icon">⚠️</span>
+      <div>
+        <div class="rs-title">Missed Weeks &amp; Last Place</div>
+        <div class="rs-sub">Penalties</div>
+      </div>
+    </div>
+    <p>Missing a week means you do not submit a DraftKings lineup for that event. Missed weeks are tracked in the standings and may affect your FedEx Points total depending on the league's penalty rules.</p>
+    <p>The <strong>Last Place</strong> column tracks how many times a player has finished last (or near last) in the weekly DK scoring. This is also tracked for informational purposes and may carry point implications.</p>
+    <div class="warn-box">
+      <strong>⚠ Missed Week Warning:</strong> Players with high missed week counts risk falling in the standings due to lost FedEx Point opportunities. Stay consistent to stay competitive.
+    </div>
+  </div>
+
+  <!-- Playoffs -->
+  <div class="rule-section blue">
+    <div class="rs-head">
+      <span class="rs-icon">🏆</span>
+      <div>
+        <div class="rs-title">FedEx Cup Playoffs</div>
+        <div class="rs-sub">End-of-season format</div>
+      </div>
+    </div>
+    <p>The playoff structure mirrors the real PGA Tour FedEx Cup format. At the end of the regular season, standings are finalized and players advance based on their cumulative FedEx Points total.</p>
+    <table class="tier-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Cutoff</th>
+          <th>Event</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="tier-tour">
+          <td><span class="tier-badge tb-tour">🏆 Tour Championship</span></td>
+          <td><strong>Top 10</strong></td>
+          <td>Tour Championship</td>
+          <td>East Lake GC · Atlanta, GA</td>
+        </tr>
+        <tr class="tier-bmw">
+          <td><span class="tier-badge tb-bmw">🥈 BMW Championship</span></td>
+          <td><strong>Top 20</strong></td>
+          <td>BMW Championship</td>
+          <td>Castle Pines GC · CO</td>
+        </tr>
+        <tr class="tier-ply">
+          <td><span class="tier-badge tb-ply">🎯 FedEx Playoffs</span></td>
+          <td><strong>Top 32</strong></td>
+          <td>FedEx St. Jude</td>
+          <td>TPC Southwind · Memphis, TN</td>
+        </tr>
+        <tr class="tier-out">
+          <td><span class="tier-badge tb-out">⛔ Eliminated</span></td>
+          <td><strong>Rank 33–53</strong></td>
+          <td>Season ends</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>During the playoff events, players continue to submit DraftKings lineups. Only players who qualify for each tier are eligible to compete in those events. The Tour Championship determines the overall season champion.</p>
+    <div class="highlight-box">
+      <strong>Every position matters:</strong> The difference between #10 and #11 is the Tour Championship. Keep grinding — standings can change dramatically in the final regular season events.
+    </div>
+  </div>
+
+  <!-- Commissioner -->
+  <div class="rule-section">
+    <div class="rs-head">
+      <span class="rs-icon">⚙️</span>
+      <div>
+        <div class="rs-title">Commissioner Notes</div>
+        <div class="rs-sub">Questions &amp; updates</div>
+      </div>
+    </div>
+    <p>The Vinksters Golf League is managed by the commissioner (vinkster15). Standings are updated weekly after each PGA Tour event concludes. Bonus points and any rule adjustments are at the commissioner's discretion.</p>
+    <p>If you have questions about your score, missed week status, or any discrepancies, reach out to the commissioner directly. The Google Sheet is the authoritative source for all standings data and is updated manually each week.</p>
+    <p>Good luck this season — may your drives be straight and your putts be short! ⛳</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 <span>Vinksters Golf League</span> · 2026 PGA Tour Season · Powered by DraftKings</p>
+</footer>
+
+</body>
+</html>
