@@ -22,7 +22,7 @@
       --font: 'Calibri', 'Segoe UI', system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; min-height: 100vh; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
     a { color: inherit; text-decoration: none; }
 
     nav { background: var(--g900); padding: 0 24px; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--gold); }
@@ -37,7 +37,14 @@
     .nav-link:hover, .nav-link.active { background: rgba(201,162,39,.12); color: var(--gold); }
     .nav-hub { border: 1px solid rgba(201,162,39,.3); color: var(--gold); font-size: 12px; margin-left: 8px; }
     .nav-hub:hover { background: rgba(201,162,39,.15); }
-    @media (max-width: 600px) { .nav-link:not(.nav-hub) { padding: 5px 8px; font-size: 12px; } }
+    @media (max-width: 600px) {
+      nav { padding: 0 12px; }
+      .nav-inner { flex-direction: column; height: auto; padding: 10px 0 8px; gap: 6px; }
+      .logo-sub { display: none; }
+      .nav-links { justify-content: center; flex-wrap: wrap; gap: 2px; }
+      .nav-link { padding: 4px 10px; font-size: 12px; }
+      .nav-hub { margin-left: 2px; font-size: 12px; }
+    }
 
     .page-header {
       background: linear-gradient(160deg, var(--g900) 0%, #0a2e12 100%);
@@ -147,10 +154,15 @@
     footer span { color: var(--gold); }
 
     @media (max-width: 540px) {
-      .event-card { grid-template-columns: 36px 1fr; }
+      .event-card { grid-template-columns: 36px 1fr; padding: 13px 14px; gap: 10px; }
       .event-right { display: none; }
       .page-header { padding: 28px 16px 24px; }
       .main { padding: 24px 16px 48px; }
+      .event-name { font-size: 13px; }
+      .event-meta { font-size: 11px; }
+      .status-key { gap: 6px; }
+      .sk-pill { font-size: 10px; padding: 4px 9px; }
+      .fedex-note { font-size: 12px; padding: 13px 15px; }
     }
   </style>
 </head>
@@ -169,7 +181,6 @@
       <a href="index.html" class="nav-link">Home</a>
       <a href="standings.html" class="nav-link">Standings</a>
       <a href="schedule.html" class="nav-link active">Schedule</a>
-      <a href="rules.html" class="nav-link">Rules</a>
       <a href="https://vinkster15.github.io/Vinksters-Leagues/" class="nav-link nav-hub">All Leagues ↗</a>
     </div>
   </div>
