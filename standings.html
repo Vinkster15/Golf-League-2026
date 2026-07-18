@@ -191,6 +191,39 @@
     tr.cutoff-bmw  td { background: rgba(90,130,180,.08); color: #3a5a7a; border-color: #90a8c0; }
     tr.cutoff-ply  td { background: rgba(45,122,66,.08);  color: var(--g700); border-color: var(--g700); }
 
+
+    /* ── Week selector ── */
+    .week-selector-wrap {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .week-selector-label {
+      font-size: 11px; font-weight: 800; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .week-selector {
+      flex: 1; min-width: 200px; max-width: 360px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 14px; font-weight: 600;
+      color: var(--text);
+      font-family: var(--font);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9465' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
+      box-shadow: var(--shadow);
+    }
+    .week-selector:focus { outline: none; border-color: var(--gold); }
+    @media (max-width: 600px) {
+      .week-selector { max-width: 100%; min-width: 0; width: 100%; }
+    }
+
     /* Updated timestamp */
     .updated { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: right; }
 
@@ -257,6 +290,46 @@
 
 <div class="main">
 
+  <!-- Week / Tournament selector -->
+  <div class="week-selector-wrap">
+    <span class="week-selector-label">📅 View</span>
+    <select class="week-selector" id="week-select" onchange="loadSheet(this.value)">
+      <optgroup label="Season Overview">
+        <option value="">Season Standings (Overall)</option>
+        <option value="Segment 1">Segment 1 (Events 1–10)</option>
+        <option value="Segment 2">Segment 2 (Events 11–20)</option>
+        <option value="Segment 3">Segment 3 (Events 21–30)</option>
+      </optgroup>
+      <optgroup label="Tournaments — Segment 1">
+        <option value="Sony Open">1 · Sony Open in Hawaii</option>
+        <option value="The American Express">2 · The American Express</option>
+        <option value="Pebble Beach">3 · AT&amp;T Pebble Beach</option>
+        <option value="Genesis">4 · Genesis Invitational</option>
+        <option value="Arnold Palmer">5 · Arnold Palmer Invitational</option>
+        <option value="The Players">6 · THE PLAYERS Championship</option>
+        <option value="Masters">7 · Masters Tournament</option>
+        <option value="RBC Heritage">8 · RBC Heritage</option>
+        <option value="PGA Championship">9 · PGA Championship</option>
+        <option value="Charles Schwab">10 · Charles Schwab Challenge</option>
+      </optgroup>
+      <optgroup label="Tournaments — Segment 2">
+        <option value="Memorial">11 · Memorial Tournament</option>
+        <option value="US Open">12 · U.S. Open</option>
+        <option value="Travelers">13 · Travelers Championship</option>
+        <option value="Rocket Mortgage">14 · Rocket Mortgage Classic</option>
+        <option value="John Deere">15 · John Deere Classic</option>
+        <option value="The Open">16 · The Open Championship</option>
+        <option value="3M Open">17 · 3M Open</option>
+        <option value="Wyndham">18 · Wyndham Championship</option>
+      </optgroup>
+      <optgroup label="Tournaments — Segment 3">
+        <option value="FedEx St. Jude">19 · FedEx St. Jude Championship</option>
+        <option value="BMW Championship">20 · BMW Championship</option>
+        <option value="Tour Championship">21 · Tour Championship</option>
+      </optgroup>
+    </select>
+  </div>
+
   <div class="tier-key">
     <span class="tk-pill tk-tour"><span class="tk-dot"></span>Tour Championship (Top 10)</span>
     <span class="tk-pill tk-bmw"><span class="tk-dot"></span>BMW Championship (Top 20)</span>
@@ -294,7 +367,11 @@
 
 <script>
   const SHEET_ID = '11ZLk3YMe6II27HqFQ1hb1Lf7C47W8iF8wwNQ4MBWgOI';
-  const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+
+  function csvUrl(sheetName) {
+    const base = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+    return sheetName ? `${base}&sheet=${encodeURIComponent(sheetName)}` : base;
+  }
 
   function parseCSV(text) {
     return text.trim().split('\n').slice(1).map(line => {
@@ -346,9 +423,20 @@
     return `<tr class="cutoff-row ${cls}"><td colspan="9">${label}</td></tr>`;
   }
 
-  async function init() {
+  async function loadSheet(sheetName) {
+    const sel = document.getElementById('week-select');
+    if (sel) sel.value = sheetName || '';
+
+    // Update tier-key visibility: hide tiers on single-event views
+    const isOverview = !sheetName || sheetName.startsWith('Segment');
+    document.querySelector('.tier-key').style.display = isOverview ? 'flex' : 'none';
+
+    document.getElementById('loader').style.display = '';
+    document.getElementById('standings-table').style.display = 'none';
+    document.getElementById('standings-body').innerHTML = '';
+
     try {
-      const res  = await fetch(CSV_URL);
+      const res  = await fetch(csvUrl(sheetName));
       const text = await res.text();
       const rows = parseCSV(text);
 
@@ -392,6 +480,12 @@
     } catch (e) {
       document.getElementById('loader').textContent = 'Unable to load standings. Check that the sheet is publicly shared and try again.';
     }
+  }
+
+  async function init() {
+    const params = new URLSearchParams(window.location.search);
+    const sheet  = params.get('sheet') || '';
+    await loadSheet(sheet);
   }
 
   init();
